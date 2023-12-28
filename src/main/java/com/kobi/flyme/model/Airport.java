@@ -1,12 +1,13 @@
 package com.kobi.flyme.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,10 +20,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 
-
+// identityInfoPlaceHolder
 @Table(name = "airport")
 public class Airport {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
@@ -30,14 +32,14 @@ public class Airport {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    private Country country;
-
-    @OneToMany(mappedBy = "sourceAirport", cascade = CascadeType.ALL)
+    // @JsonBackReference("FlightsFrom")
+    @JsonIgnore
+    @OneToMany(mappedBy = "sourceAirport", cascade = CascadeType.REMOVE, fetch=FetchType.LAZY)
     private List<Flight> flightsFrom;
 
-    @OneToMany(mappedBy = "destinationAirport", cascade = CascadeType.ALL)
+    // @JsonBackReference("FlightsTo")
+    @JsonIgnore
+    @OneToMany(mappedBy = "destinationAirport", cascade = CascadeType.REMOVE, fetch=FetchType.LAZY)
     private List<Flight> flightsTo;
 
 }

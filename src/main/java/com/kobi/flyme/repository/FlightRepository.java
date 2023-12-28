@@ -1,8 +1,18 @@
 package com.kobi.flyme.repository;
 
-import com.kobi.flyme.model.Country;
 import com.kobi.flyme.model.Flight;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FlightRepository extends CrudRepository<Flight, Integer> {
+import java.util.List;
+
+public interface FlightRepository extends JpaRepository<Flight, Integer> {
+
+//    @Query("SELECT f FROM Flight f WHERE f.isFull = false AND f.date > CURRENT_TIMESTAMP")
+//    List<Flight> findAvailableFlights();
+
+    List<Flight> findAllByAvailableTrue();
+    Flight findById(int id);
+    List<Flight> findAll();
+    Flight save(Flight flight);
+    Flight deleteById(int id);
 }

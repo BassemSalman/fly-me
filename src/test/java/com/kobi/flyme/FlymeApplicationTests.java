@@ -9,5 +9,4 @@ class FlymeApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
