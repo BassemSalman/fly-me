@@ -14,4 +14,5 @@ public interface PlaneRepository extends JpaRepository<Plane, Integer> {
 
     List<Plane> findAllByPlaneAirline(Airline airline);
     Plane findByIdAndPlaneAirline(int id, Airline planeAirline);
+    List<Plane> findAllByIsAvailableTrue();
 }

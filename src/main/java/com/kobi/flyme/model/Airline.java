@@ -54,5 +54,21 @@ public class Airline {
     public void increaseProfit(float ticketPrice){
         profit += ticketPrice;
     }
-    public void decreaseProfit(float ticketPrice) { profit -= ticketPrice; }
+    public void decreaseProfit(float ticketPrice){
+        profit -= ticketPrice;
+    }
+
+    @Override
+    public int hashCode(){
+        return Integer.hashCode(id);
+    }
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Airline airline = (Airline) o;
+        return id == airline.getId();
+    }
+
+
 }

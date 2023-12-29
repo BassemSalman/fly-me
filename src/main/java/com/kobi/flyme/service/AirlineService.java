@@ -30,14 +30,36 @@ public class AirlineService implements AirlineCustomRepository {
         repo.deleteById(id);
         return repo.findById(id) == null;
     }
+
+    public Airline increaseProfit(Airline airline, float amount) {
+        airline.decreaseProfit(amount);
+        return repo.save(airline);
+    }
+
+    public Airline increaseProfit(int airlineId, float amount) {
+        Airline airline = repo.findById(airlineId);
+        if(airline == null) return null;
+        airline.decreaseProfit(amount);
+        return repo.save(airline);
+    }
+
+    public Airline decreaseProfit(Airline airline, float amount) {
+        airline.decreaseProfit(amount);
+        return repo.save(airline);
+    }
+
+    public Airline decreaseProfit(int airlineId, float amount) {
+        Airline airline = repo.findById(airlineId);
+        if(airline == null) return null;
+        airline.decreaseProfit(amount);
+        return repo.save(airline);
+    }
+
+    // Allowed attributes: name
     public Airline update(int id, Airline updated){
         Airline toUpdate = repo.findById(id);
         if(toUpdate != null) {
-            if(updated.getName() != null)
-                toUpdate.setName(updated.getName());
-            // Can't reset bottleneck so we can know if it is set or not in model
-            if(updated.getProfit() != toUpdate.getProfit() && updated.getProfit() > 0)
-                toUpdate.setProfit(updated.getProfit());
+            if(updated.getName() != null) toUpdate.setName(updated.getName());
             return repo.save(toUpdate);
         }
         return repo.save(updated);

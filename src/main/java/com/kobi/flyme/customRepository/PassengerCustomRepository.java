@@ -13,7 +13,10 @@ public interface PassengerCustomRepository {
     Passenger save(@Valid Passenger passenger);
     boolean deleteById(int id);
     Passenger update(int id, @Valid Passenger passenger);
-    boolean bookFlight(int passengerId, int flightId);
-    boolean unbookFlight(int passengerId, int flightId);
     Passenger topUp(int passengerId, float amount);
+    Passenger topUp(Passenger passenger, float amount);
+    Passenger refundTicketPrice(int passengerId, float amount);
+    Passenger refundTicketPrice(Passenger passenger, float amount);
+    Passenger payTicketPrice(int passengerId, float amount);
+    Passenger payTicketPrice(Passenger passenger, float amount);
 }

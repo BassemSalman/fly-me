@@ -1,8 +1,6 @@
 package com.kobi.flyme.service;
 
 import com.kobi.flyme.customRepository.PassengerCustomRepository;
-import com.kobi.flyme.model.Airline;
-import com.kobi.flyme.model.Flight;
 import com.kobi.flyme.model.Passenger;
 import com.kobi.flyme.repository.PassengerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,7 @@ public class PassengerService implements PassengerCustomRepository {
     @Autowired
     private PassengerRepository repo;
     @Autowired
-    private AuditTrailService auditService;
+    private AuditTrailService auditTrailService;
     @Autowired
     private FlightService flightService;
     @Autowired
@@ -34,61 +32,78 @@ public class PassengerService implements PassengerCustomRepository {
     }
 
     public boolean deleteById(int id){
-        if(repo.findById(id) == null) return false;
-        List<Flight> bookedFlights = flightService.findAllInFutureByPassengerId(id);
-
+        Passenger passenger = repo.findById(id);
+        if(passenger == null) return false;
         repo.deleteById(id);
+        auditTrailService.save("Passenger with id " + passenger.getId() + " - attempt to delete");
         return repo.findById(id) == null;
     }
+
+    // Allowed attributes: msisdn, email, name
     public Passenger update(int id, Passenger updated){
         Passenger toUpdate = repo.findById(id);
         if(toUpdate != null) {
-            if(updated.getName() != null) toUpdate.setName(toUpdate.getName());
+            if(updated.getName() != null) toUpdate.setName(updated.getName());
+            if(updated.getMsisdn() != null) toUpdate.setMsisdn(updated.getMsisdn());
+            if(updated.getEmail() != null) toUpdate.setEmail(updated.getEmail());
             return repo.save(toUpdate);
         }
         return repo.save(updated);
     }
 
-
-    public boolean bookFlight(int passengerId, int flightId){
-        Flight flight = flightService.findById(flightId);
-        Passenger passenger = findById(passengerId);
-
-        if(passenger == null || flight == null){
-            auditService.save("Either passenger with id " + passengerId + " or book flight with id " + flightId + " could not be found!");
-            return false;
-        }
-        Airline airline = flight.getFlightAirline();
-        int airlineId = airline.getId();
-
-
-        float ticketPrice = flight.getTicketPrice();
-        if(flight.isAvailable() && passenger.canAfford(ticketPrice)){
-
-            // Modify models then perform partial update
-            passenger.payTicketPrice(ticketPrice);
-            flight.increasePassengerCount();
-            airline.increaseProfit(ticketPrice);
-
-            auditService.save("Passenger with id " + passengerId + " successfully booked flight with id " + flightId);
+    /*
+            Bad approach : modify models then perform partial update
             update(passengerId, passenger);
             airlineService.update(airlineId, airline);
             flightService.update(flightId, flight);
-            return true;
-        }
-        auditService.save("Passenger with id " + passengerId + " failed to book flight with id " + flightId);
-        return false;
-    }
 
-    public boolean unbookFlight(int passengerId, int flightId){
-        return true;
-    }
+            Better approach : use custom methods to restrict api updating unwanted attributes
+     */
 
     public Passenger topUp(int passengerId, float amount) {
         Passenger passenger = findById(passengerId);
         if(passenger == null) return null;
         passenger.topUp(amount);
+        auditTrailService.save("Passenger with id " + passengerId + " successfully topped up " + amount + "$");
         return repo.save(passenger);
     }
+
+    public Passenger topUp(Passenger passenger, float amount) {
+        if(passenger == null) return null;
+        passenger.topUp(amount);
+        auditTrailService.save("Passenger with id " + passenger.getId() + " successfully topped up " + amount + "$");
+        return repo.save(passenger);
+    }
+
+    public Passenger refundTicketPrice(int passengerId, float amount) {
+        Passenger passenger = repo.findById(passengerId);
+        if(passenger == null) return null;
+        passenger.refundTicketPrice(amount);
+        auditTrailService.save("Passenger with id " + passengerId + " successfully refunded " + amount + "$");
+        return repo.save(passenger);
+    }
+
+    public Passenger refundTicketPrice(Passenger passenger, float amount) {
+        if(passenger == null) return null;
+        passenger.refundTicketPrice(amount);
+        auditTrailService.save("Passenger with id " + passenger.getId() + " successfully refunded " + amount + "$");
+        return repo.save(passenger);
+    }
+
+    public Passenger payTicketPrice(int passengerId, float amount) {
+        Passenger passenger = repo.findById(passengerId);
+        if(passenger == null) return null;
+        passenger.payTicketPrice(amount);
+        auditTrailService.save("Passenger with id " + passengerId + " successfully payed " + amount + "$");
+        return repo.save(passenger);
+    }
+
+    public Passenger payTicketPrice(Passenger passenger, float amount) {
+        if(passenger == null) return null;
+        passenger.payTicketPrice(amount);
+        auditTrailService.save("Passenger with id " + passenger.getId() + " successfully payed " + amount + "$");
+        return repo.save(passenger);
+    }
+
 
 }

@@ -2,6 +2,7 @@ package com.kobi.flyme.controller;
 
 import com.kobi.flyme.model.Passenger;
 import com.kobi.flyme.service.PassengerService;
+import com.kobi.flyme.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class PassengerController {
     @Autowired
     PassengerService service;
+    @Autowired
+    ReservationService reservationService;
 
     @GetMapping
     public ResponseEntity<?> getAllPassengers(){
@@ -32,26 +35,22 @@ public class PassengerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePassenger(@PathVariable("id") int id) {
-        boolean isDeleted = service.deleteById(id);
-        return isDeleted  ? ResponseEntity.status(HttpStatus.ACCEPTED).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    public ResponseEntity<?> discardPassenger(@PathVariable("id") int id) {
+        boolean isDiscarded = reservationService.discardPassenger(id);
+        return isDiscarded  ? ResponseEntity.status(HttpStatus.ACCEPTED).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<?> updatePassenger(@PathVariable("id") int id, @RequestBody Passenger passenger){
         Passenger toUpdate = service.update(id, passenger);
         return toUpdate != null ? ResponseEntity.status(HttpStatus.ACCEPTED).body(toUpdate) : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @PostMapping("/{passengerId}/flights/{flightId}")
-    public ResponseEntity<?> addPassenger(@PathVariable("passengerId") int passengerId, @PathVariable("flightId") int flightId){
-        boolean successfullyBooked = service.bookFlight(passengerId, flightId);
-        return successfullyBooked  ? ResponseEntity.status(HttpStatus.ACCEPTED).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
-
-    @PostMapping("/{passengerId}/topup")
-    public ResponseEntity<?> topUpBalance(@PathVariable("passengerId") int passengerId, @RequestParam("amount") float amount){
+    @PostMapping("/topup/{passengerId}/amount/{amount}")
+    public ResponseEntity<?> topUpBalance(@PathVariable("passengerId") int passengerId, @PathVariable("amount") float amount){
         Passenger passenger = service.topUp(passengerId, amount);
         return passenger != null  ? ResponseEntity.status(HttpStatus.ACCEPTED).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
+
+
 }

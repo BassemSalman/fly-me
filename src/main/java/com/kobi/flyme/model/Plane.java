@@ -40,7 +40,7 @@ public class Plane {
     private int capacity;
 
     @Column(name = "is_available")
-    private boolean available;
+    private boolean isAvailable;
 
     // @JsonBackReference("FlightPlane")
     @JsonIgnore

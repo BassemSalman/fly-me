@@ -30,6 +30,7 @@ public class AirportService implements AirportCustomRepository {
         return repo.findById(id) == null;
     }
 
+    // Allowed attributes : name
     public Airport update(int id, Airport updated){
         Airport toUpdate = repo.findById(id);
         if(toUpdate != null) {

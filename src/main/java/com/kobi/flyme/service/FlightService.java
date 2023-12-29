@@ -2,6 +2,7 @@ package com.kobi.flyme.service;
 
 import com.kobi.flyme.customRepository.FlightCustomRepository;
 import com.kobi.flyme.model.Flight;
+import com.kobi.flyme.model.Passenger;
 import com.kobi.flyme.repository.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,13 @@ import java.util.stream.Collectors;
 public class FlightService implements FlightCustomRepository {
     @Autowired
     private FlightRepository repo;
+    @Autowired
+    private PlaneService planeService;
+    @Autowired
+    private AirlineService airlineService;
     public Flight save(Flight flight){
+        if(flight.getFlightPlane().isAvailable() == false) return null;
+        flight.getFlightPlane().setAvailable(false);
         return repo.save(flight);
     }
 
@@ -25,13 +32,12 @@ public class FlightService implements FlightCustomRepository {
     }
 
     public boolean deleteById(int id){
-        if(repo.findById(id) == null) return false;
         repo.deleteById(id);
         return repo.findById(id) == null;
     }
 
-    public List<Flight> findAllAvailableAndInFuture(){ // could be enhanced using sql later
-        return repo.findAllByAvailableTrue()
+    public List<Flight> findAllNotFullAndInFuture(){ // could be enhanced using sql later
+        return repo.findAllByisFullFalse()
                 .stream()
                 .filter(Flight::isInFuture)
                 .collect(Collectors.toList());
@@ -43,27 +49,13 @@ public class FlightService implements FlightCustomRepository {
                 .filter(Flight::isInFuture)
                 .collect(Collectors.toList());
     }
-    public List<Flight> findAllInFutureByPassengerId(int passengerId){
+    public List<Flight> findAllInFutureByPassenger(Passenger passenger){
         return repo.findAll()
                 .stream()
                 .filter(Flight::isInFuture)
-                .filter(flight -> flight.getFlightPassengers().contains(passengerId))
+                .filter(flight -> flight.getFlightPassengers().contains(passenger))
                 .collect(Collectors.toList());
     }
-    @Autowired
-    PlaneService planeService;
-    public Flight update(int id, Flight updated){
-        Flight toUpdate = repo.findById(id);
-        if(toUpdate != null){
-            if(updated.getFlightPlane() != null) toUpdate.setFlightPlane(planeService.findById(updated.getFlightPlane().getId()));
-            // notice that isFull is to be altered as well. Done on db level
-            // what about passengers who are already
-            if(updated.getPassengerCount() != toUpdate.getPassengerCount() && updated.getPassengerCount() != 0)
-                toUpdate.setPassengerCount(updated.getPassengerCount());
 
-            return repo.save(toUpdate);
-        }
 
-        return repo.save(updated);
-    }
 }

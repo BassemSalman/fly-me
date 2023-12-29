@@ -10,32 +10,38 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/planes")
 
-// TODO: Planes, Flights, should have airline specific endpoints plus the general ones for admin
-
 public class PlaneController {
     @Autowired
     PlaneService service;
 
-
-
     @GetMapping
-    public ResponseEntity<?> getPlaneByIdandAirlineId(@PathVariable("id") int id){
-        return ResponseEntity.ok(service.findAllByAirlineId(id));
+    public ResponseEntity<?> getAllPlanes(){
+        return ResponseEntity.ok(service.findAll());
+    }
+    @GetMapping("/available")
+    public ResponseEntity<?> getAllAvailablePlanes(){
+        return ResponseEntity.ok(service.findAllByIsAvailableTrue());
     }
 
-    @PostMapping("/{airlineId}")
-        public ResponseEntity<?> createPlane(@RequestBody Plane plane){
-            Plane savedPlane = service.save(plane);
-            return savedPlane != null ? ResponseEntity.status(HttpStatus.CREATED).body(savedPlane) : ResponseEntity.status(HttpStatus.CONFLICT).build();
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPlaneById(@PathVariable("id") int id){
+        Plane plane = service.findById(id);
+        return plane != null ?  ResponseEntity.ok(plane) : ResponseEntity.notFound().build();
+    }
+//    @GetMapping("/airlines/{airlineId}")
+//    public ResponseEntity<?> getAllAirlinePlanes(@PathVariable("airlineId") int airlineId){
+//        return ResponseEntity.ok(service.findAllByAirlineId(airlineId));
+//    }
+
+    @PostMapping
+    public ResponseEntity<?> createPlane(@RequestBody Plane plane){
+        Plane savedPlane = service.save(plane);
+        return savedPlane != null ? ResponseEntity.status(HttpStatus.CREATED).body(savedPlane) : ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePlane(@PathVariable("id") int id){
-        boolean isDeleted = service.deleteById(id);
-        return isDeleted  ? ResponseEntity.status(HttpStatus.ACCEPTED).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
 
-    @PutMapping("/{id}")
+
+    @PatchMapping("/{id}")
     public ResponseEntity<?> updatePlane(@PathVariable("id") int id, @RequestBody Plane plane){
         Plane toUpdate = service.update(id, plane);
         return toUpdate != null ? ResponseEntity.status(HttpStatus.ACCEPTED).body(toUpdate) : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

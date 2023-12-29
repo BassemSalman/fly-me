@@ -16,9 +16,6 @@ public class PlaneService implements PlaneCustomRepository {
     @Autowired
     private AirlineService airlineService;
     public Plane save(Plane plane){
-        Airline targetAirline = airlineService.findById(plane.getPlaneAirline().getId());
-        if(targetAirline == null) return null;
-        plane.setPlaneAirline(targetAirline);
         plane.setAvailable(true);
         return repo.save(plane);
     }
@@ -39,6 +36,8 @@ public class PlaneService implements PlaneCustomRepository {
         return repo.findAllByPlaneAirline(airline);
     }
 
+
+
     public Plane findById(int id){
         return repo.findById(id);
     }
@@ -48,14 +47,45 @@ public class PlaneService implements PlaneCustomRepository {
         repo.deleteById(id);
         return repo.findById(id) == null;
     }
+
+    // Allowed attributess: model, name
     public Plane update(int id, Plane updated){
         Plane toUpdate = repo.findById(id);
         if(toUpdate != null) {
             if(updated.getName() != null) toUpdate.setName(updated.getName());
-            if(updated.getModel() != null) toUpdate.setName(updated.getModel());
+            if(updated.getModel() != null) toUpdate.setModel(updated.getModel());
             return repo.save(toUpdate);
         }
         return repo.save(updated);
+    }
+    public Plane bookPlane(int id) {
+        Plane plane = repo.findById(id);
+        if(plane == null) return null;
+        plane.setAvailable(false);
+        return repo.save(plane);
+    }
+
+    public Plane unbookPlane(int id) {
+        Plane plane = repo.findById(id);
+        if(plane == null) return null;
+        plane.setAvailable(true);
+        return repo.save(plane);
+    }
+
+    public Plane bookPlane(Plane plane) {
+        if(plane == null) return null;
+        plane.setAvailable(false);
+        return repo.save(plane);
+    }
+
+    public Plane unbookPlane(Plane plane) {
+        if(plane == null) return null;
+        plane.setAvailable(true);
+        return repo.save(plane);
+    }
+
+    public List<Plane> findAllByIsAvailableTrue() {
+        return repo.findAllByIsAvailableTrue();
     }
 
 }

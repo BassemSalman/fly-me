@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,7 +18,6 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 
 // identityInfoPlaceHolder
 @Table(name = "flight")
@@ -62,25 +61,31 @@ public class Flight {
     @Column(name = "ticket_price")
     private float ticketPrice;
 
-    @Column(name = "is_available")
-    private boolean available = true; // depending on capacity - managed in service
+    @Column(name = "is_full")
+    private boolean isFull; // depending on capacity - managed in service
 
-    public void increasePassengerCount(){
-        passengerCount++;
+    public Flight(){
+        this.isFull=false;
+        this.flightPassengers=new ArrayList<>();
     }
-    public void decreasePassengerCount(){
-        passengerCount--;
+
+    ////
+    // call this after each delete or unbook, however upon save we need to adjust using another way since it depends on list
+    public void adjustPassengerCountAndIsFull(){
+        passengerCount = flightPassengers.size();
+        isFull = (passengerCount == flightPlane.getCapacity());
     }
-    public void adjustPassengerCount(){ passengerCount = flightPassengers.size(); }
     public boolean isInFuture(){ return this.date.isAfter(LocalDateTime.now()); }
 
+    @Override
+    public int hashCode(){
+        return Integer.hashCode(id);
+    }
     @Override
     public boolean equals(Object o){
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Passenger passenger = (Passenger) o;
-        return id == passenger.getId();
+        Flight flight = (Flight) o;
+        return id == flight.getId();
     }
-
-
 }

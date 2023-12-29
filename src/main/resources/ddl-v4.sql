@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `audit_trail` (
   `action_date` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `flight` (
   `destination_airport_id` int unsigned NOT NULL,
   `passenger_count` int unsigned NOT NULL,
   `date` datetime NOT NULL,
-  `is_available` tinyint NOT NULL DEFAULT '1',
+  `is_full` tinyint NOT NULL DEFAULT '1',
   `ticket_price` float unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `flight` (
   CONSTRAINT `dest` FOREIGN KEY (`destination_airport_id`) REFERENCES `airport` (`id`),
   CONSTRAINT `plane` FOREIGN KEY (`plane_id`) REFERENCES `plane` (`id`),
   CONSTRAINT `src` FOREIGN KEY (`source_airport_id`) REFERENCES `airport` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -102,12 +102,13 @@ CREATE TABLE IF NOT EXISTS `flight_passenger` (
 DROP TABLE IF EXISTS `passenger`;
 CREATE TABLE IF NOT EXISTS `passenger` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
+  `name` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `balance` float unsigned NOT NULL,
-  `action_date` datetime NOT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `msisdn` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '12312312',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -124,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `plane` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `FK_plane_airway` (`airline_id`) USING BTREE,
   CONSTRAINT `FK_plane_airline` FOREIGN KEY (`airline_id`) REFERENCES `airline` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4123 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 
@@ -139,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `reset_pass` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Data exporting was unselected.
 

@@ -1,17 +1,20 @@
 package com.kobi.flyme.customRepository;
 
 import com.kobi.flyme.model.User;
-import jakarta.validation.Valid;
+import com.kobi.flyme.model.UserDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
 public interface UserCustomRepository  {
-    public User findByUsername(String username);
-    User findById(int id);
-    List<User> findAll();
-    User save(@Valid User user);
-    boolean deleteById(int id);
+   UserDTO createNewAdmin(User user);
+   UserDTO createNewClient(User user);
+   UserDTO findByUsername(String username);
 
+   List<UserDTO> findAll();
+   boolean deleteById(int id);
+   UserDTO mapUserToDTO(User user);
+   List<UserDTO> mapAllUsersToDTO(List<User> users);
+   boolean getIsResetPassById(int userId);
 }

@@ -1,18 +1,16 @@
 package com.kobi.flyme.model;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -38,14 +36,12 @@ public class Passenger {
     @Column(name = "balance")
     private float balance;
 
-    @Column(name = "is_booked")
-    private boolean booked;
+    @Email
+    @Column(name = "email")
+    private String email;
 
-    @Column(name = "action_date")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @CreationTimestamp
-    private LocalDateTime date;
-
+    @Column(name = "msisdn")
+    private String msisdn;
 
 
     // @JsonBackReference("FlightPassenger")

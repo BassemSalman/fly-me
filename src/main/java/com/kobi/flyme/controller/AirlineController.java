@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 public class AirlineController {
     @Autowired
     AirlineService service;
+    @Autowired
+    PlaneService planeService;
 
     @GetMapping
     public ResponseEntity<?> getAllAirlines(){
@@ -39,7 +41,7 @@ public class AirlineController {
         return isDeleted  ? ResponseEntity.status(HttpStatus.ACCEPTED).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<?> updateAirline(@PathVariable("id") int id, @RequestBody Airline airline){
         Airline toUpdate = service.update(id, airline);
         return toUpdate != null ? ResponseEntity.status(HttpStatus.ACCEPTED).body(toUpdate) : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -51,10 +53,6 @@ public class AirlineController {
         return ResponseEntity.ok(profit);
     }
 
-
-    @Autowired
-    PlaneService planeService;
-
     @GetMapping("/{airlineId}/planes")
     public ResponseEntity<?> getAllPlanesbyAirlineId(@PathVariable("airlineId") int airlineId){
         return ResponseEntity.ok(planeService.findAllByAirlineId(airlineId));
@@ -64,5 +62,9 @@ public class AirlineController {
         Plane plane = planeService.findByIdAndAirlineId(planeId, airlineId);
         return plane != null ?  ResponseEntity.ok(plane) : ResponseEntity.notFound().build();
     }
-
+//    @PostMapping("/{airlineId}/planes")
+//    public ResponseEntity<?> addPlaneToAirline(@PathVariable("airlineId") int airlineId, @RequestBody Plane plane){
+//        planeService.save(plane);
+//        return plane != null ?  ResponseEntity.ok(plane) : ResponseEntity.notFound().build();
+//    }
 }
