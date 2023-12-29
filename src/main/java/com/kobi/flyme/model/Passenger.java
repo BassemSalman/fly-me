@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Entity
-@Component
 
 @Getter
 @Setter
@@ -63,7 +62,6 @@ public class Passenger {
         balance -= ticketPrice;
     }
     public void refundTicketPrice(float ticketPrice) { balance += ticketPrice; }
-
     public void topUp(float amount) {
         balance += amount;
     }

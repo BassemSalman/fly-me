@@ -1,11 +1,11 @@
 package com.kobi.flyme.model;
 
 import lombok.Builder;
-import org.springframework.stereotype.Component;
+import lombok.Getter;
 
 // User without resetPass and password
-@Component
 @Builder
+@Getter
 public class UserDTO {
     private int id;
     private String username;

@@ -1,16 +1,15 @@
 package com.kobi.flyme.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 @Entity
-@Component
 
 @Getter
 @Setter
@@ -26,7 +25,7 @@ public class User { // implements UserDetails {
     private int id;
 
     @NotNull
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
     @Column(name = "password")
@@ -42,6 +41,7 @@ public class User { // implements UserDetails {
     @JoinColumn(name = "airline_id")
     private Airline adminAirline;
 
+    @JsonIgnore
     @NotNull
     @Column(name = "reset_pass")
     private boolean resetPass;

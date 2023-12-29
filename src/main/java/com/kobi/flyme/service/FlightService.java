@@ -2,7 +2,6 @@ package com.kobi.flyme.service;
 
 import com.kobi.flyme.customRepository.FlightCustomRepository;
 import com.kobi.flyme.model.Flight;
-import com.kobi.flyme.model.Passenger;
 import com.kobi.flyme.repository.FlightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ public class FlightService implements FlightCustomRepository {
     private AirlineService airlineService;
     public Flight save(Flight flight){
         if(flight.getFlightPlane().isAvailable() == false) return null;
-        flight.getFlightPlane().setAvailable(false);
+//        flight.getFlightPlane().setAvailable(false);
         return repo.save(flight);
     }
 
@@ -36,10 +35,10 @@ public class FlightService implements FlightCustomRepository {
         return repo.findById(id) == null;
     }
 
-    public List<Flight> findAllNotFullAndInFuture(){ // could be enhanced using sql later
-        return repo.findAllByisFullFalse()
+    public List<Flight> findAllAvailable(){ // could be enhanced using sql later
+        return repo.findAll()
                 .stream()
-                .filter(Flight::isInFuture)
+                .filter(Flight::isAvailable)
                 .collect(Collectors.toList());
     }
 
@@ -49,11 +48,11 @@ public class FlightService implements FlightCustomRepository {
                 .filter(Flight::isInFuture)
                 .collect(Collectors.toList());
     }
-    public List<Flight> findAllInFutureByPassenger(Passenger passenger){
+    public List<Flight> findAllInFutureByPassengerId(int passengerId){
         return repo.findAll()
                 .stream()
                 .filter(Flight::isInFuture)
-                .filter(flight -> flight.getFlightPassengers().contains(passenger))
+                .filter(flight -> flight.getFlightPassengers().contains(passengerId))
                 .collect(Collectors.toList());
     }
 

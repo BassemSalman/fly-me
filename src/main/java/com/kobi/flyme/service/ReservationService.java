@@ -32,13 +32,13 @@ public class ReservationService implements ReservationCustomRepository {
     private void addPassengerToFlight(Flight flight, Passenger passenger) {
         if(passenger == null || flight == null) return;
         flight.getFlightPassengers().add(passenger);
-        flight.adjustPassengerCountAndIsFull();
+//        flight.adjustPassengerCountAndIsFull();
         flightRepo.save(flight);
     }
     private void removePassengerFromFlight(Flight flight, Passenger passenger) {
         if(passenger == null || flight == null) return;
         flight.getFlightPassengers().remove(passenger);
-        flight.adjustPassengerCountAndIsFull();
+//        flight.adjustPassengerCountAndIsFull();
         flightRepo.save(flight);
     }
 
@@ -46,7 +46,7 @@ public class ReservationService implements ReservationCustomRepository {
     public boolean discardPassenger(int passengerId) {
         Passenger passenger = passengerRepo.findById(passengerId);
         if(passenger == null) return false;
-        List<Flight> bookedFlights = flightRepo.findAllInFutureByPassenger(passenger);
+        List<Flight> bookedFlights = flightRepo.findAllInFutureByPassengerId(passengerId);
 
         // can create logic to put everthing to edit it hashmaps and loop on them in the end to persist at once
         // or can call service methods in each iteration -> connection overhead
@@ -68,7 +68,7 @@ public class ReservationService implements ReservationCustomRepository {
         Flight flight = flightRepo.findById(flightId);
         if(flight == null) return false;
         List<Passenger> passengers = flight.getFlightPassengers();
-        planeRepo.unbookPlane(flight.getFlightPlane());
+//        planeRepo.unbookPlane(flight.getFlightPlane());
         airlineRepo.decreaseProfit(flight.getFlightAirline(), flight.getTicketPrice() * passengers.size());
 
         for(Passenger passenger : passengers) {
@@ -113,7 +113,7 @@ public class ReservationService implements ReservationCustomRepository {
             return false;
         }
 
-        Airline airline = flight.getFlightAirline();
+                Airline airline = flight.getFlightAirline();
         int airlineId = airline.getId();
         float ticketPrice = flight.getTicketPrice();
 

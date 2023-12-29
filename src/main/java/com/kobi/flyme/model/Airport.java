@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Entity
-@Component
 
 @Getter
 @Setter
@@ -41,5 +40,5 @@ public class Airport {
     @JsonIgnore
     @OneToMany(mappedBy = "destinationAirport", cascade = CascadeType.REMOVE, fetch=FetchType.LAZY)
     private List<Flight> flightsTo;
-
+    
 }

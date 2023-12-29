@@ -29,9 +29,8 @@ public class FlightController {
 
     @GetMapping("/available")
     public ResponseEntity<?> getAvailableFlights(){
-        return ResponseEntity.ok(service.findAllNotFullAndInFuture());
+        return ResponseEntity.ok(service.findAllAvailable());
     }
-
 
     @PostMapping("/{id}")
     public ResponseEntity<?> createFlight(@RequestBody Flight flight){
@@ -39,10 +38,12 @@ public class FlightController {
         return savedFlight != null ? ResponseEntity.status(HttpStatus.CREATED).body(savedFlight) : ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
-    // through reservationservice
+    // through reservationService
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteFlight(@PathVariable("id") int id){
         boolean isDeleted = reservationService.cancelFlight(id);
         return isDeleted  ? ResponseEntity.status(HttpStatus.ACCEPTED).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
+
+
 }

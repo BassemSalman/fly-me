@@ -65,7 +65,7 @@ public class AirlineService implements AirlineCustomRepository {
         return repo.save(updated);
     }
 
-    public float findProfitById(int id){
+    public float findProfitById(int id) throws EntityNotFoundException{
         Airline airline = repo.findById(id);
         if(airline == null){
             throw new EntityNotFoundException();

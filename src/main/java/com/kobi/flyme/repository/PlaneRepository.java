@@ -11,8 +11,5 @@ public interface PlaneRepository extends JpaRepository<Plane, Integer> {
     List<Plane> findAll();
     Plane save(Plane plane);
     void deleteById(int id);
-
     List<Plane> findAllByPlaneAirline(Airline airline);
-    Plane findByIdAndPlaneAirline(int id, Airline planeAirline);
-    List<Plane> findAllByIsAvailableTrue();
 }

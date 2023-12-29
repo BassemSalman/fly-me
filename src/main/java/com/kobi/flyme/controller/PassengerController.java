@@ -1,6 +1,7 @@
 package com.kobi.flyme.controller;
 
 import com.kobi.flyme.model.Passenger;
+import com.kobi.flyme.service.FlightService;
 import com.kobi.flyme.service.PassengerService;
 import com.kobi.flyme.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ public class PassengerController {
     PassengerService service;
     @Autowired
     ReservationService reservationService;
+    @Autowired
+    FlightService flightService;
 
     @GetMapping
     public ResponseEntity<?> getAllPassengers(){
@@ -53,4 +56,8 @@ public class PassengerController {
     }
 
 
+    @GetMapping("/{id}/flights")
+    public ResponseEntity<?> findUpcomingPassengerFlights(@PathVariable("id") int id){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(flightService.findAllInFutureByPassengerId(id));
+    }
 }

@@ -20,30 +20,26 @@ public class PlaneController {
     }
     @GetMapping("/available")
     public ResponseEntity<?> getAllAvailablePlanes(){
-        return ResponseEntity.ok(service.findAllByIsAvailableTrue());
+        return ResponseEntity.ok(service.findAllAvailable());
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<?> getPlaneById(@PathVariable("id") int id){
         Plane plane = service.findById(id);
         return plane != null ?  ResponseEntity.ok(plane) : ResponseEntity.notFound().build();
     }
-//    @GetMapping("/airlines/{airlineId}")
-//    public ResponseEntity<?> getAllAirlinePlanes(@PathVariable("airlineId") int airlineId){
-//        return ResponseEntity.ok(service.findAllByAirlineId(airlineId));
-//    }
-
     @PostMapping
     public ResponseEntity<?> createPlane(@RequestBody Plane plane){
         Plane savedPlane = service.save(plane);
         return savedPlane != null ? ResponseEntity.status(HttpStatus.CREATED).body(savedPlane) : ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
-
-
-
     @PatchMapping("/{id}")
     public ResponseEntity<?> updatePlane(@PathVariable("id") int id, @RequestBody Plane plane){
         Plane toUpdate = service.update(id, plane);
         return toUpdate != null ? ResponseEntity.status(HttpStatus.ACCEPTED).body(toUpdate) : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePlane(@PathVariable("id") int id){
+        boolean isDeleted = service.deleteById(id);
+        return isDeleted ? ResponseEntity.ok(HttpStatus.ACCEPTED) : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }

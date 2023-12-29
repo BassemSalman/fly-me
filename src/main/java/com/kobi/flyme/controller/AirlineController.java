@@ -1,7 +1,6 @@
 package com.kobi.flyme.controller;
 
 import com.kobi.flyme.model.Airline;
-import com.kobi.flyme.model.Plane;
 import com.kobi.flyme.service.AirlineService;
 import com.kobi.flyme.service.PlaneService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,11 +56,11 @@ public class AirlineController {
     public ResponseEntity<?> getAllPlanesbyAirlineId(@PathVariable("airlineId") int airlineId){
         return ResponseEntity.ok(planeService.findAllByAirlineId(airlineId));
     }
-    @GetMapping("/{airlineId}/planes/{planeId}")
-    public ResponseEntity<?> getPlaneByIdandAirlineId(@PathVariable("airlineId") int airlineId, @PathVariable("planeId") int planeId){
-        Plane plane = planeService.findByIdAndAirlineId(planeId, airlineId);
-        return plane != null ?  ResponseEntity.ok(plane) : ResponseEntity.notFound().build();
+    @GetMapping("/{airlineId}/available-planes")
+    public ResponseEntity<?> getAllAvailablePlanesbyAirlineId(@PathVariable("airlineId") int airlineId){
+        return ResponseEntity.ok(planeService.findAllAvailableByAirlineId(airlineId));
     }
+
 //    @PostMapping("/{airlineId}/planes")
 //    public ResponseEntity<?> addPlaneToAirline(@PathVariable("airlineId") int airlineId, @RequestBody Plane plane){
 //        planeService.save(plane);
