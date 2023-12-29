@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 
-// identityInfoPlaceHolder
+
 @Table(name = "airline")
 public class Airline {
     @Id

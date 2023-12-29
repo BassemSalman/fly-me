@@ -23,8 +23,6 @@ public class ReservationService implements ReservationCustomRepository {
     @Autowired
     PassengerCustomRepository passengerRepo;
     @Autowired
-    PlaneCustomRepository planeRepo;
-    @Autowired
     AuditTrailCustomRepository auditRepo;
     @Autowired
     AirlineCustomRepository airlineRepo;
@@ -88,7 +86,6 @@ public class ReservationService implements ReservationCustomRepository {
             return false;
         }
         Airline airline = flight.getFlightAirline();
-        int airlineId = airline.getId();
         float ticketPrice = flight.getTicketPrice();
 
 
@@ -114,7 +111,6 @@ public class ReservationService implements ReservationCustomRepository {
         }
 
                 Airline airline = flight.getFlightAirline();
-        int airlineId = airline.getId();
         float ticketPrice = flight.getTicketPrice();
 
         passengerRepo.refundTicketPrice(passenger, ticketPrice);

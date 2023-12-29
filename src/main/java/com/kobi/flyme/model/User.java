@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-// identityInfoPlaceHolder
+
 @Table(name = "user")
 public class User { // implements UserDetails {
     @Id

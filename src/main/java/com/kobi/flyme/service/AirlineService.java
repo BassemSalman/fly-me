@@ -32,7 +32,7 @@ public class AirlineService implements AirlineCustomRepository {
     }
 
     public Airline increaseProfit(Airline airline, float amount) {
-        airline.decreaseProfit(amount);
+        airline.increaseProfit(amount);
         return repo.save(airline);
     }
 

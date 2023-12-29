@@ -31,6 +31,10 @@ public class FlightController {
     public ResponseEntity<?> getAvailableFlights(){
         return ResponseEntity.ok(service.findAllAvailable());
     }
+    @GetMapping("/in-future")
+    public ResponseEntity<?> getFutureFlights(){
+        return ResponseEntity.ok(service.findAllInFuture());
+    }
 
     @PostMapping("/{id}")
     public ResponseEntity<?> createFlight(@RequestBody Flight flight){

@@ -17,7 +17,7 @@ public class FlightService implements FlightCustomRepository {
     private PlaneService planeService;
     @Autowired
     private AirlineService airlineService;
-    public Flight save(Flight flight){
+    public Flight save(Flight flight){ // only called from createFlight
         if(flight.getFlightPlane().isAvailable() == false) return null;
 //        flight.getFlightPlane().setAvailable(false);
         return repo.save(flight);

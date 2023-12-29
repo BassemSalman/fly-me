@@ -8,12 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 
@@ -22,7 +20,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 
-// identityInfoPlaceHolder
+
 @Table(name = "plane")
 public class Plane {
     @Id
@@ -63,6 +61,6 @@ public class Plane {
                         flight -> flight.getDate()
                         .isBefore(LocalDateTime.now().minus(10, ChronoUnit.SECONDS))
                 )
-                .collect(Collectors.toList()).size() == 0;
+                .count() == 0;
     }
 }
