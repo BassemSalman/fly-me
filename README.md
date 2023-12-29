@@ -1,8 +1,9 @@
-# Flights Management System Backend
+# FlyMe Flights Management System Backend
 
 ## What can it do?
-- CRUD Operations on Flights, Planes, Passengers.. with logs
-- Can handle booking, unbooking and other similar operations
+- CRUD Operations on Flights, Planes, Passengers.. with logs ( per client )
+- Booking/Unbooking Flights with Refund
+- Admin vs Client Roles Access Control
 
 ## Technologies Used: 
 - Spring Boot 3.0.1
