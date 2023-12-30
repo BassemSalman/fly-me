@@ -25,16 +25,26 @@ public class PassengerController {
         return ResponseEntity.ok(service.findAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/airline/{airlineId}")
+    public ResponseEntity<?> getAllPassengersByAirline(int airlineId){
+        return ResponseEntity.ok(service.findAllByAirlineId(airlineId));
+    }
+
+    @GetMapping("/id/{id}")
     public ResponseEntity<?> getPassengerById(@PathVariable("id") int id){
         Passenger passenger = service.findById(id);
+        return passenger != null ?  ResponseEntity.ok(passenger) : ResponseEntity.notFound().build();
+    }
+    @GetMapping("/email/{email}")
+    public ResponseEntity<?> getPassengerByEmail(@PathVariable("email") String email){
+        Passenger passenger = service.findByEmail(email);
         return passenger != null ?  ResponseEntity.ok(passenger) : ResponseEntity.notFound().build();
     }
 
     @PostMapping
     public ResponseEntity<?> createPassenger(@RequestBody Passenger passenger){
         Passenger savedPassenger = service.save(passenger);
-        return savedPassenger != null ? ResponseEntity.status(HttpStatus.CREATED).body(savedPassenger) : ResponseEntity.status(HttpStatus.CONFLICT).build();
+        return savedPassenger != null ? ResponseEntity.status(HttpStatus.CREATED).body(savedPassenger) : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @DeleteMapping("/{id}")

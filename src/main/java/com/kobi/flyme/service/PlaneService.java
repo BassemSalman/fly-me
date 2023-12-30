@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class PlaneService implements PlaneCustomRepository {
@@ -25,7 +26,7 @@ public class PlaneService implements PlaneCustomRepository {
         return repo.findAll();
     }
     public List<Plane> findAllAvailable(){
-        return repo.findAll().stream().filter(Plane::isAvailable).collect(Collectors.toList());
+        return repo.findAll().stream().filter(Plane::isAvailable).collect(toList());
     }
     public List<Plane> findAllByAirlineId(int airlineId) {
         Airline airline = airlineService.findById(airlineId);
@@ -35,7 +36,7 @@ public class PlaneService implements PlaneCustomRepository {
     public List<Plane> findAllAvailableByAirlineId(int airlineId) {
         Airline airline = airlineService.findById(airlineId);
         if(airline == null) return null;
-        return repo.findAllByPlaneAirline(airline).stream().filter(Plane::isAvailable).collect(Collectors.toList());
+        return repo.findAllByPlaneAirline(airline).stream().filter(Plane::isAvailable).collect(toList());
     }
 
     public Plane findById(int id){

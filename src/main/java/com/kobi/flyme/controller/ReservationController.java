@@ -1,7 +1,7 @@
 package com.kobi.flyme.controller;
 
 
-import com.kobi.flyme.model.ReservationRequest;
+import com.kobi.flyme.DTO.ReservationDTO;
 import com.kobi.flyme.service.ReservationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +16,12 @@ public class ReservationController {
     ReservationService service;
 
     @PostMapping("/book")
-    public ResponseEntity<?> bookFlight(@RequestBody @Valid ReservationRequest request){
+    public ResponseEntity<?> bookFlight(@RequestBody @Valid ReservationDTO request){
         boolean successfullyBooked = service.bookFlight(request.getPassengerId(), request.getFlightId());
         return successfullyBooked  ? ResponseEntity.status(HttpStatus.ACCEPTED).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
     @PostMapping("/unbook")
-    public ResponseEntity<?> unbookFlight(@RequestBody @Valid ReservationRequest request){
+    public ResponseEntity<?> unbookFlight(@RequestBody @Valid ReservationDTO request){
         boolean successfullyUnbooked = service.unbookFlight(request.getPassengerId(), request.getFlightId());
         return successfullyUnbooked  ? ResponseEntity.status(HttpStatus.ACCEPTED).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }

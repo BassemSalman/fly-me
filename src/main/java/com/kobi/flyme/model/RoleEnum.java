@@ -3,8 +3,11 @@ package com.kobi.flyme.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 public enum RoleEnum {
-    ADMIN,
-    CLIENT;
+    ADMIN ("ADMIN"),
+    CLIENT ("CLIENT");
+
+    RoleEnum(String role) {
+    }
 
     @JsonCreator
     public static RoleEnum fromString(String value) {
@@ -14,4 +17,7 @@ public enum RoleEnum {
             return null; // Set to null if the value is invalid
         }
     }
+
+
+
 }

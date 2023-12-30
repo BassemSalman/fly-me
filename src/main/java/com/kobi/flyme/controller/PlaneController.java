@@ -30,7 +30,7 @@ public class PlaneController {
     @PostMapping
     public ResponseEntity<?> createPlane(@RequestBody Plane plane){
         Plane savedPlane = service.save(plane);
-        return savedPlane != null ? ResponseEntity.status(HttpStatus.CREATED).body(savedPlane) : ResponseEntity.status(HttpStatus.CONFLICT).build();
+        return savedPlane != null ? ResponseEntity.status(HttpStatus.CREATED).body(savedPlane) : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
     @PatchMapping("/{id}")
     public ResponseEntity<?> updatePlane(@PathVariable("id") int id, @RequestBody Plane plane){

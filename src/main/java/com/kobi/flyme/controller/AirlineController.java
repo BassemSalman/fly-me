@@ -2,7 +2,9 @@ package com.kobi.flyme.controller;
 
 import com.kobi.flyme.model.Airline;
 import com.kobi.flyme.service.AirlineService;
+import com.kobi.flyme.service.FlightService;
 import com.kobi.flyme.service.PlaneService;
+import com.kobi.flyme.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,11 @@ public class AirlineController {
     AirlineService service;
     @Autowired
     PlaneService planeService;
+    @Autowired
+    ReservationService reservationService;
+    @Autowired
+    FlightService flightService;
+
 
     @GetMapping
     public ResponseEntity<?> getAllAirlines(){
@@ -31,12 +38,12 @@ public class AirlineController {
     @PostMapping
     public ResponseEntity<?> createAirline(@RequestBody Airline airline){
         Airline savedAirline = service.save(airline);
-        return savedAirline != null ? ResponseEntity.status(HttpStatus.CREATED).body(savedAirline) : ResponseEntity.status(HttpStatus.CONFLICT).build();
+        return savedAirline != null ? ResponseEntity.status(HttpStatus.CREATED).body(savedAirline) : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAirline(@PathVariable("id") int id){
-        boolean isDeleted = service.deleteById(id);
+        boolean isDeleted = reservationService.discardAirline(id);
         return isDeleted  ? ResponseEntity.status(HttpStatus.ACCEPTED).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
@@ -59,6 +66,15 @@ public class AirlineController {
     @GetMapping("/{airlineId}/available-planes")
     public ResponseEntity<?> getAllAvailablePlanesbyAirlineId(@PathVariable("airlineId") int airlineId){
         return ResponseEntity.ok(planeService.findAllAvailableByAirlineId(airlineId));
+    }
+
+    @GetMapping("/{airlineId}/flights")
+    public ResponseEntity<?> getAllFlightsByAirlineId(@PathVariable("airlineId") int airlineId){
+        return ResponseEntity.ok(flightService.findAllByAirlineId(airlineId));
+    }
+    @GetMapping("/{airlineId}/future-flights")
+    public ResponseEntity<?> getAllFutureFlightsbyAirlineId(@PathVariable("airlineId") int airlineId){
+        return ResponseEntity.ok(flightService.findAllInFutureByAirlineId(airlineId));
     }
 
 //    @PostMapping("/{airlineId}/planes")

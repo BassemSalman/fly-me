@@ -1,10 +1,10 @@
-package com.kobi.flyme.model;
+package com.kobi.flyme.DTO;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public class ReservationRequest {
+public class ReservationDTO {
     @NotNull
     Integer flightId;
     @NotNull

@@ -1,20 +1,22 @@
 package com.kobi.flyme.customRepository;
 
-import com.kobi.flyme.model.User;
-import com.kobi.flyme.model.UserDTO;
+import com.kobi.flyme.DTO.RegisterUserDTO;
+import com.kobi.flyme.DTO.UserDTO;
+import com.kobi.flyme.model.Airline;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
 public interface UserCustomRepository  {
-   UserDTO createNewAdmin(User user);
-   UserDTO createNewClient(User user);
+   UserDTO createNewAdmin(RegisterUserDTO registerUserDTO);
+   UserDTO createNewClient(RegisterUserDTO registerUserDTO);
    UserDTO findByUsername(String username);
-
+   UserDTO findById(int id);
    List<UserDTO> findAll();
    boolean deleteById(int id);
-   UserDTO mapUserToDTO(User user);
-   List<UserDTO> mapAllUsersToDTO(List<User> users);
    boolean getIsResetPassById(int userId);
+//   List<UserDTO> findAllByAirline(Airline airline);
+   UserDTO resetPassword(int userId);
+   boolean deleteByAdminAirline(Airline airline);
 }

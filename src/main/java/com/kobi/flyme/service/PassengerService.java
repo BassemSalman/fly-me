@@ -8,27 +8,39 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 public class PassengerService implements PassengerCustomRepository {
     @Autowired
     private PassengerRepository repo;
     @Autowired
     private AuditTrailService auditTrailService;
-    @Autowired
-    private FlightService flightService;
-    @Autowired
-    private AirlineService airlineService;
 
     public Passenger save(Passenger passenger){
+        if(repo.findByEmail(passenger.getEmail()) != null) return passenger;
         return repo.save(passenger);
     }
 
     public List<Passenger> findAll(){
         return repo.findAll();
     }
+    public List<Passenger> findAllByAirlineId(int airlineId){
+        return repo.findAll()
+                .stream()
+                .filter(passenger ->
+                        passenger.getPassengerFlights()
+                                .stream()
+                                .anyMatch(flight -> flight.getFlightAirline().getId() == airlineId)
+                )
+                .collect(toList());
+    }
 
     public Passenger findById(int id){
         return repo.findById(id);
+    }
+    public Passenger findByEmail(String email){
+        return repo.findByEmail(email);
     }
 
     public boolean deleteById(int id){

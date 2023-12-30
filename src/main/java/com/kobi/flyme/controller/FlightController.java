@@ -39,7 +39,7 @@ public class FlightController {
     @PostMapping("/{id}")
     public ResponseEntity<?> createFlight(@RequestBody Flight flight){
         Flight savedFlight = service.save(flight);
-        return savedFlight != null ? ResponseEntity.status(HttpStatus.CREATED).body(savedFlight) : ResponseEntity.status(HttpStatus.CONFLICT).build();
+        return savedFlight != null ? ResponseEntity.status(HttpStatus.CREATED).body(savedFlight) : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     // through reservationService

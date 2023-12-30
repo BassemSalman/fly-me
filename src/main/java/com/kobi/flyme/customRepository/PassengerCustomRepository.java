@@ -9,6 +9,8 @@ import java.util.List;
 @Repository
 public interface PassengerCustomRepository {
     Passenger findById(int id);
+    List<Passenger> findAllByAirlineId(int airlineId);
+    Passenger findByEmail(String email);
     List<Passenger> findAll();
     Passenger save(@Valid Passenger passenger);
     boolean deleteById(int id);

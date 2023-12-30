@@ -34,7 +34,7 @@ public class Passenger {
     private float balance;
 
     @Email
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "msisdn")
@@ -55,7 +55,6 @@ public class Passenger {
     public boolean canAfford(float ticketPrice){
         return ticketPrice <= balance;
     }
-
     public void payTicketPrice(float ticketPrice){
         balance -= ticketPrice;
     }

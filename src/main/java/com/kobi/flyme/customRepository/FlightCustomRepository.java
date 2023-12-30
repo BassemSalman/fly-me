@@ -10,6 +10,8 @@ import java.util.List;
 public interface FlightCustomRepository {
     List<Flight> findAllAvailable(); // Not full and In Future
     List<Flight> findAllInFutureByPassengerId(int passengerId);
+    List<Flight> findAllInFutureByAirlineId(int airlineId);
+    List<Flight> findAllByAirlineId(int airlineId);
     List<Flight> findAllInFuture();
     Flight findById(int id);
     List<Flight> findAll();

@@ -1,5 +1,6 @@
 package com.kobi.flyme.repository;
 
+import com.kobi.flyme.model.Airline;
 import com.kobi.flyme.model.Flight;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,4 +16,5 @@ public interface FlightRepository extends JpaRepository<Flight, Integer> {
     List<Flight> findAll();
     Flight save(Flight flight);
     void deleteById(int id);
+    List<Flight> findAllByFlightAirline(Airline airline);
 }

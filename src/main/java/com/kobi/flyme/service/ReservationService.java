@@ -1,5 +1,6 @@
 package com.kobi.flyme.service;
 
+import com.kobi.flyme.DTO.UserDTO;
 import com.kobi.flyme.customRepository.*;
 import com.kobi.flyme.model.Airline;
 import com.kobi.flyme.model.Flight;
@@ -12,7 +13,7 @@ import java.util.List;
 
 
 /*
-    Higher level service to handle booking, unbooking, flight cancellation, and discard passenger with refund and etc
+    Higher level service to handle booking, unbooking, flight cancellation, and discard passenger with refund and client deletion to handle discardAirline
        => where multiple repo's are needed
  */
 
@@ -26,6 +27,8 @@ public class ReservationService implements ReservationCustomRepository {
     AuditTrailCustomRepository auditRepo;
     @Autowired
     AirlineCustomRepository airlineRepo;
+    @Autowired
+    UserCustomRepository userRepo;
 
     private void addPassengerToFlight(Flight flight, Passenger passenger) {
         if(passenger == null || flight == null) return;
@@ -89,7 +92,7 @@ public class ReservationService implements ReservationCustomRepository {
         float ticketPrice = flight.getTicketPrice();
 
 
-        if(!flight.isFull() && passenger.canAfford(ticketPrice)){
+        if(!flight.isAvailable() && passenger.canAfford(ticketPrice)){
             this.addPassengerToFlight(flight, passenger);
             passengerRepo.payTicketPrice(passenger, ticketPrice);
             airlineRepo.increaseProfit(airline, ticketPrice);
@@ -110,7 +113,7 @@ public class ReservationService implements ReservationCustomRepository {
             return false;
         }
 
-                Airline airline = flight.getFlightAirline();
+        Airline airline = flight.getFlightAirline();
         float ticketPrice = flight.getTicketPrice();
 
         passengerRepo.refundTicketPrice(passenger, ticketPrice);
@@ -120,5 +123,29 @@ public class ReservationService implements ReservationCustomRepository {
         return true;
     }
 
+    @Transactional
+    public boolean discardAirline(int airlineId){
+        Airline airline = airlineRepo.findById(airlineId);
+        // to empty admins, flights, and refund passengers
+        List<Flight> flights = flightRepo.findAllInFutureByAirlineId(airlineId);
 
+        for(Flight flight : flights){
+            cancelFlight(flight.getId()); // handles passenger and flight logic
+        }
+
+        userRepo.deleteByAdminAirline(airline); // delete all admins
+        airlineRepo.deleteById(airlineId); // delete the airline -> cascades planes
+        return airlineRepo.findById(airlineId) == null;
+    }
+
+    @Transactional
+    public boolean discardClient(int id){
+        UserDTO userDTO = userRepo.findById(id);
+        Airline airline = userDTO.getAdminAirline();
+
+        if(airline.getAirlineAdmins().size() == 1) {
+            return discardAirline(airline.getId());
+        }
+        return userRepo.deleteById(id);
+    }
 }

@@ -7,4 +7,6 @@ public interface ReservationCustomRepository {
     boolean cancelFlight(int flightId); // instead of flight cancellation
 //    void addPassengerToFlight(Flight flight, Passenger passenger);
 //    void removePassengerFromFlight(Flight flight, Passenger passenger);
+
+    boolean discardAirline(int airlineId); // should refund to all upcoming flights, thus cancel flight loop
 }

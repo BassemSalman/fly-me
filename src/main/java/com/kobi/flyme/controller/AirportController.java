@@ -28,7 +28,7 @@ public class AirportController {
     @PostMapping
     public ResponseEntity<?> createAirport(@RequestBody Airport airport){
         Airport savedAirport = service.save(airport);
-        return savedAirport != null ? ResponseEntity.status(HttpStatus.CREATED).body(savedAirport) : ResponseEntity.status(HttpStatus.CONFLICT).build();
+        return savedAirport != null ? ResponseEntity.status(HttpStatus.CREATED).body(savedAirport) : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @DeleteMapping("/{id}")

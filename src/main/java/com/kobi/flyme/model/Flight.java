@@ -26,8 +26,8 @@ public class Flight {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "passenger_count")
-    private int passengerCount;
+//    @Column(name = "passenger_count")
+//    private int passengerCount;
 
     // @JsonBackReference("AirlineFlight")
     @ManyToOne

@@ -59,7 +59,7 @@ public class Plane {
                 .stream()
                 .filter(
                         flight -> flight.getDate()
-                        .isBefore(LocalDateTime.now().minus(10, ChronoUnit.SECONDS))
+                        .isBefore(LocalDateTime.now().minus(1, ChronoUnit.MINUTES))
                 )
                 .count() == 0;
     }
